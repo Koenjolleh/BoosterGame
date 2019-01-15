@@ -8,10 +8,16 @@ public class RocketMovement : MonoBehaviour
 
     Rigidbody rigidbody;
 
+    AudioSource audioSource;
+
+    bool play;
+    bool toggleChange;
+
     // Start is called before the first frame update
     void Start()
     {
         rigidbody = GetComponent<Rigidbody>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -25,13 +31,29 @@ public class RocketMovement : MonoBehaviour
         //Thrust while rotating
         if(Input.GetKey(KeyCode.Space)){
             rigidbody.AddRelativeForce(Vector3.up);
+            playRocketSound();
+        } else {
+            stopRocketSound();
         }
 
         //Rotating either left or right
         if(Input.GetKey(KeyCode.A)){
-            print("leeeeft");
+            transform.Rotate(Vector3.forward);
         } else if (Input.GetKey(KeyCode.D)){
-            print("riiiigth");
+            transform.Rotate(-Vector3.forward);
+        }
+    }
+
+    private void stopRocketSound()
+    {
+        if(audioSource.isPlaying){
+            audioSource.Stop();
+        }
+    }
+
+    private void playRocketSound(){
+        if(!audioSource.isPlaying){
+            audioSource.Play();
         }
     }
 }
