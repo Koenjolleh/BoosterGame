@@ -12,9 +12,6 @@ public class RocketMovement : MonoBehaviour
     Rigidbody rigidbody;
     AudioSource audioSource;
 
-    bool play;
-    bool toggleChange;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -27,6 +24,22 @@ public class RocketMovement : MonoBehaviour
     {
        Thrust();
        Rotate();
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        switch(collision.gameObject.tag){
+
+            case "Friendly":
+                print("U alive boi");
+                break;
+            case "Fuel":
+                print("Fuel regain yeah");
+                break;
+            default:
+                print("U dead boi");
+                break;
+        }        
     }
 
     private void Thrust()
