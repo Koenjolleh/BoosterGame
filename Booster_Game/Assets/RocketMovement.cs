@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class RocketMovement : MonoBehaviour
 {
@@ -11,6 +12,9 @@ public class RocketMovement : MonoBehaviour
 
     Rigidbody rigidbody;
     AudioSource audioSource;
+
+    enum State {Alive,Dead,Transcending}
+
 
     // Start is called before the first frame update
     void Start()
@@ -36,8 +40,11 @@ public class RocketMovement : MonoBehaviour
             case "Fuel":
                 print("Fuel regain yeah");
                 break;
+            case "Finish":
+                SceneManager.LoadScene(1);
+                break;
             default:
-                print("U dead boi");
+                SceneManager.LoadScene(0);
                 break;
         }        
     }
