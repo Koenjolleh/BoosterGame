@@ -46,13 +46,13 @@ public class RocketMovement : MonoBehaviour
     {
 
         //Thrust while rotating
-        if (Input.GetKey(KeyCode.Space))
-        {
+        if (Input.GetKey(KeyCode.W)){
             rigidbody.AddRelativeForce(Vector3.up * mainThrust);
             playRocketSound();
-        }
-        else
-        {
+        } else if (Input.GetKey(KeyCode.S)){
+            rigidbody.AddRelativeForce(Vector3.down * mainThrust);
+            playRocketSound();
+        } else{
             stopRocketSound();
         }
 
