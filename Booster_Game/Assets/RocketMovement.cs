@@ -9,6 +9,9 @@ public class RocketMovement : MonoBehaviour
     //SerializeField make it so you can adjust the value in the inspector in Unity
     [SerializeField] float rcsThrust = 300f;
     [SerializeField] float mainThrust = 10f;
+    [SerializeField] AudioClip mainEngine;
+    [SerializeField] AudioClip succes;
+    [SerializeField] AudioClip death;
 
     Rigidbody rigidbody;
     AudioSource audioSource;
@@ -28,6 +31,7 @@ public class RocketMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Fix rocket sound evt. med else StopSound
         if (state == State.Alive)
         {
             Thrust();
@@ -37,30 +41,42 @@ public class RocketMovement : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-
-
+        //If rocket already died or is transcending to next lvl. Collision will not be handled.
+        if (state != State.Alive){ return; }
 
         //Handles collision of the rocket based on the tags of the objects it bumps into
         switch(collision.gameObject.tag){
 
             case "Friendly":
-                print("U alive boi"); //Remove
+                //Todo something spicy
                 break;
             case "Fuel":
-                print("Fuel regain yeah"); //Todo maybe remove
+                //Todo add some spicy fuel
                 break;
             case "Finish":
-                state = State.Transcending;
-                Invoke("LoadNextLevel", 1f);
+                StartCompleteLevelSequence();
                 break;
             default:
-                state = State.Dead;
-                Invoke("HandlePlayerDeath", 1.5f);
+                StartDeathSequence();
                 break;
         }        
     }
 
-    private void HandlePlayerDeath()
+    private void StartCompleteLevelSequence()
+    {
+        state = State.Transcending;
+        PlayLevelCompleteSound();
+        Invoke("LoadNextLevel", 1f);
+    }
+
+    private void StartDeathSequence()
+    {
+        state = State.Dead;
+        PlayDeathSound();
+        Invoke("LoadFirstLevel", 1.5f);
+    }
+
+    private void LoadFirstLevel()
     {
         SceneManager.LoadScene(0);
     }
@@ -85,7 +101,7 @@ public class RocketMovement : MonoBehaviour
         }
         else
         {
-            StopRocketSound();
+            StopSound();
         }
     }
 
@@ -109,7 +125,7 @@ public class RocketMovement : MonoBehaviour
         rigidbody.freezeRotation = false; // Resume physics control of rotation
     }
 
-    private void StopRocketSound()
+    private void StopSound()
     {
         if(audioSource.isPlaying){
             audioSource.Stop();
@@ -118,7 +134,19 @@ public class RocketMovement : MonoBehaviour
 
     private void PlayRocketSound(){
         if(!audioSource.isPlaying){
-            audioSource.Play();
+            audioSource.PlayOneShot(mainEngine);
         }
+    }
+
+    private void PlayDeathSound()
+    {
+        StopSound();
+        audioSource.PlayOneShot(death);
+    }
+
+    private void PlayLevelCompleteSound()
+    {
+        StopSound();
+        audioSource.PlayOneShot(succes);
     }
 }
