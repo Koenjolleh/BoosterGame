@@ -9,9 +9,14 @@ public class RocketMovement : MonoBehaviour
     //SerializeField make it so you can adjust the value in the inspector in Unity
     [SerializeField] float rcsThrust = 300f;
     [SerializeField] float mainThrust = 10f;
+
     [SerializeField] AudioClip mainEngine;
     [SerializeField] AudioClip succes;
     [SerializeField] AudioClip death;
+
+    [SerializeField] ParticleSystem mainEngineParticles;
+    [SerializeField] ParticleSystem succesParticles;
+    [SerializeField] ParticleSystem deathParticles;
 
     Rigidbody rigidbody;
     AudioSource audioSource;
@@ -66,6 +71,7 @@ public class RocketMovement : MonoBehaviour
     {
         state = State.Transcending;
         PlayLevelCompleteSound();
+        succesParticles.Play();
         Invoke("LoadNextLevel", 1f);
     }
 
@@ -73,6 +79,7 @@ public class RocketMovement : MonoBehaviour
     {
         state = State.Dead;
         PlayDeathSound();
+        deathParticles.Play();
         Invoke("LoadFirstLevel", 1.5f);
     }
 
@@ -93,15 +100,19 @@ public class RocketMovement : MonoBehaviour
         {
             rigidbody.AddRelativeForce(Vector3.up * mainThrust);
             PlayRocketSound();
+            mainEngineParticles.Play();
+            
         }
         else if (Input.GetKey(KeyCode.S))
         {
             rigidbody.AddRelativeForce(Vector3.down * mainThrust);
             PlayRocketSound();
+            mainEngineParticles.Play();
         }
         else
         {
             StopSound();
+            mainEngineParticles.Stop();
         }
     }
 
@@ -111,7 +122,7 @@ public class RocketMovement : MonoBehaviour
 
         float rotationThisFrame = rcsThrust * Time.deltaTime;
 
-        //Rotating either left or right
+        //Rotate either left or right
         
         if (Input.GetKey(KeyCode.A))
         {
