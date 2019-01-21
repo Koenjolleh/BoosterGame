@@ -14,9 +14,10 @@ public class RocketMovement : MonoBehaviour
     [SerializeField] AudioClip succes;
     [SerializeField] AudioClip death;
 
-    [SerializeField] ParticleSystem mainEngineParticles;
-    [SerializeField] ParticleSystem succesParticles;
-    [SerializeField] ParticleSystem deathParticles;
+    //Could not get this to work. Current Unity version dose not support Legacy Particle System
+    //[SerializeField] ParticleSystem mainEngineParticles;
+    //[SerializeField] ParticleSystem succesParticles;
+    //[SerializeField] ParticleSystem deathParticles;
 
     Rigidbody rigidbody;
     AudioSource audioSource;
@@ -71,7 +72,7 @@ public class RocketMovement : MonoBehaviour
     {
         state = State.Transcending;
         PlayLevelCompleteSound();
-        succesParticles.Play();
+        //succesParticles.Play();
         Invoke("LoadNextLevel", 1f);
     }
 
@@ -79,7 +80,7 @@ public class RocketMovement : MonoBehaviour
     {
         state = State.Dead;
         PlayDeathSound();
-        deathParticles.Play();
+        //deathParticles.Play();
         Invoke("LoadFirstLevel", 1.5f);
     }
 
@@ -95,24 +96,27 @@ public class RocketMovement : MonoBehaviour
 
     private void Thrust()
     {
+
+        float thrustThisFrame = mainThrust * Time.deltaTime;
+
         //Thrust while rotating
         if (Input.GetKey(KeyCode.W))
         {
-            rigidbody.AddRelativeForce(Vector3.up * mainThrust);
+            rigidbody.AddRelativeForce(Vector3.up * thrustThisFrame);
             PlayRocketSound();
-            mainEngineParticles.Play();
+            //mainEngineParticles.Play();
             
         }
         else if (Input.GetKey(KeyCode.S))
         {
-            rigidbody.AddRelativeForce(Vector3.down * mainThrust);
+            rigidbody.AddRelativeForce(Vector3.down * thrustThisFrame);
             PlayRocketSound();
-            mainEngineParticles.Play();
+            //mainEngineParticles.Play();
         }
         else
         {
             StopSound();
-            mainEngineParticles.Stop();
+            //mainEngineParticles.Stop();
         }
     }
 
