@@ -21,6 +21,7 @@ public class RocketMovement : MonoBehaviour
 
     Rigidbody rigidbody;
     AudioSource audioSource;
+    const float LevelLoadingDelay = 1.5f;
 
     enum State {Alive,Dead,Transcending}
     [SerializeField] State state = State.Alive;
@@ -81,7 +82,7 @@ public class RocketMovement : MonoBehaviour
         state = State.Dead;
         PlayDeathSound();
         //deathParticles.Play();
-        Invoke("LoadFirstLevel", 1.5f);
+        Invoke("LoadFirstLevel", LevelLoadingDelay);
     }
 
     private void LoadFirstLevel()

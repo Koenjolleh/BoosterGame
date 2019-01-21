@@ -25,15 +25,21 @@ public class Oscillator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float cycles = Time.time / period; // grows continually from game start
+        MovementCycle();
+    }
 
+    private void MovementCycle()
+    {
+    
+        if(period <= Mathf.Epsilon) { return; } // Protects against NaN if period is 0
+        float cycles = Time.time / period; // Grows continually from game start
         const float tau = Mathf.PI * 2;
         float rawSineWave = Mathf.Sin(cycles * tau);
 
-        movementFactor = (rawSineWave / 2f) + 0.5f; 
+        movementFactor = (rawSineWave / 2f) + 0.5f;
 
         //-movementVector from moving down rather than up
-        Vector3 offset = -movementVector * movementFactor;
+        Vector3 offset = movementVector * movementFactor;
         transform.position = startingPos + offset;
     }
 }
