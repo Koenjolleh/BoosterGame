@@ -73,7 +73,6 @@ public class RocketMovement : MonoBehaviour
     {
         state = State.Transcending;
         PlayLevelCompleteSound();
-        //succesParticles.Play();
         Invoke("LoadNextLevel", 1f);
     }
 
@@ -81,7 +80,6 @@ public class RocketMovement : MonoBehaviour
     {
         state = State.Dead;
         PlayDeathSound();
-        //deathParticles.Play();
         Invoke("LoadFirstLevel", LevelLoadingDelay);
     }
 
@@ -105,19 +103,16 @@ public class RocketMovement : MonoBehaviour
         {
             rigidbody.AddRelativeForce(Vector3.up * thrustThisFrame);
             PlayRocketSound();
-            //mainEngineParticles.Play();
             
         }
         else if (Input.GetKey(KeyCode.S))
         {
             rigidbody.AddRelativeForce(Vector3.down * thrustThisFrame);
             PlayRocketSound();
-            //mainEngineParticles.Play();
         }
         else
         {
             StopSound();
-            //mainEngineParticles.Stop();
         }
     }
 

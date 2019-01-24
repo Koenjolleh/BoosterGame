@@ -10,7 +10,7 @@ public class Oscillator : MonoBehaviour
     Vector3 startingPos; // must be stored for absolute movement
     float movementFactor; // 0 for not moved 1 for fully moved
 
-    [SerializeField] Vector3 movementVector = new Vector3(10f,10f,10f);
+    [SerializeField] Vector3 movementVector = new Vector3(10f,10f,0f);
     [SerializeField] float period = 2f;
     
 
