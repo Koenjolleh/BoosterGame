@@ -22,6 +22,8 @@ public class RocketMovement : MonoBehaviour
     Rigidbody rigidbody;
     AudioSource audioSource;
     const float LevelLoadingDelay = 1.5f;
+    [SerializeField] bool collisionDisabled = false;
+
 
     enum State {Alive,Dead,Transcending}
     [SerializeField] State state = State.Alive;
@@ -38,27 +40,35 @@ public class RocketMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         //Fix rocket sound evt. med else StopSound
         if (state == State.Alive)
         {
             Thrust();
-            Rotate(); 
+            Rotate();
+        }
+
+        //Only works in development build
+        if (Debug.isDebugBuild)
+        {
+            //toggles collision with a press of C
+            ToggleCollision();
+
+            //Instantly loads next level with a press of L
+            InstantlyLoadNextLevel();
         }
     }
 
     void OnCollisionEnter(Collision collision)
     {
         //If rocket already died or is transcending to next lvl. Collision will not be handled.
-        if (state != State.Alive){ return; }
+        if (state != State.Alive || collisionDisabled) { return; }
 
         //Handles collision of the rocket based on the tags of the objects it bumps into
         switch(collision.gameObject.tag){
 
             case "Friendly":
-                //Todo something spicy
-                break;
-            case "Fuel":
-                //Todo add some spicy fuel
+                //Landing pad
                 break;
             case "Finish":
                 StartCompleteLevelSequence();
@@ -73,7 +83,7 @@ public class RocketMovement : MonoBehaviour
     {
         state = State.Transcending;
         PlayLevelCompleteSound();
-        Invoke("LoadNextLevel", 1f);
+        Invoke("LoadNextLevel", LevelLoadingDelay);
     }
 
     private void StartDeathSequence()
@@ -90,7 +100,13 @@ public class RocketMovement : MonoBehaviour
 
     private void LoadNextLevel()
     {
-        SceneManager.LoadScene(1); //Make other levels available. Make currentlevel prob.
+        if (SceneManager.GetActiveScene().buildIndex + 1 >= SceneManager.sceneCountInBuildSettings)
+        {
+            LoadFirstLevel();
+        } else
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        }     
     }
 
     private void Thrust()
@@ -159,5 +175,21 @@ public class RocketMovement : MonoBehaviour
     {
         StopSound();
         audioSource.PlayOneShot(succes);
+    }
+
+    private void ToggleCollision()
+    {
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            collisionDisabled = !collisionDisabled; // Toggles between true and false for the boolean
+        } 
+    }
+
+    private void InstantlyLoadNextLevel()
+    {
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            LoadNextLevel();
+        }
     }
 }
